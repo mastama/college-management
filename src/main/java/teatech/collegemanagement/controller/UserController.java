@@ -6,19 +6,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import teatech.collegemanagement.dto.RegisterRequest;
 import teatech.collegemanagement.dto.UserDto;
 import teatech.collegemanagement.service.AuthService;
-import teatech.collegemanagement.service.UserService;
 
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api")
 public class UserController {
-    private final UserService userService;
     private final AuthService authService;
 
     @PostMapping("/register")
