@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
 import teatech.collegemanagement.dto.RegisterRequest;
 import teatech.collegemanagement.dto.UserDto;
@@ -21,9 +22,10 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public UserDto createUser(RegisterRequest request) {
         log.info("Start createUser: {} ", request.getUsername());
-        if (userRepository.existsByUsername(request.getUsername()))
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username already registered");
 
+        if (userRepository.existsByUsername(request.getUsername())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username already registered");
+        }
         User user = new User();
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
