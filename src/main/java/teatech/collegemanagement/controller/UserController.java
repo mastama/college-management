@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+import teatech.collegemanagement.dto.LoginRequest;
 import teatech.collegemanagement.dto.RegisterRequest;
 import teatech.collegemanagement.dto.UserDto;
+import teatech.collegemanagement.entity.User;
 import teatech.collegemanagement.service.AuthService;
 
 @Slf4j
@@ -38,5 +40,23 @@ public class UserController {
         }
         log.info("Outgoing /register: {}", createdUser.getUsername());
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+        log.info("Incoming /login: {} ", request.getUsername());
+        User user = (User) authService.login(request);
+        if (user == null) {
+            return new ResponseEntity<>("user or password is not valid", HttpStatus.UNAUTHORIZED);
+        }
+
+        UserDto userDto = new UserDto();
+        userDto.setUsername(user.getUsername());
+        userDto.setPassword(user.getPassword());
+        userDto.setEmail(user.getEmail());
+        userDto.setNoHandphone(user.getNoHandphone());
+
+        log.info("Outgoing /login: {} ", request.getUsername());
+        return new ResponseEntity<>(userDto, HttpStatus.ACCEPTED);
     }
 }
