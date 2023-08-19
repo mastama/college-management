@@ -4,22 +4,25 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-import teatech.collegemanagement.dto.LoginRequest;
-import teatech.collegemanagement.dto.RegisterRequest;
-import teatech.collegemanagement.dto.UserDto;
+import teatech.collegemanagement.dto.*;
 import teatech.collegemanagement.entity.User;
 import teatech.collegemanagement.service.AuthService;
+import teatech.collegemanagement.service.impl.UserDetailServiceImpl;
+import teatech.collegemanagement.util.JwtUtil;
 
 @Slf4j
 @RequiredArgsConstructor
 @RestController
 public class UserController {
     private final AuthService authService;
+    private final UserDetailServiceImpl userDetailService;
+    private final JwtUtil jwtUtil;
 
     @PostMapping("/register")
     public ResponseEntity<?> createUser(@RequestBody RegisterRequest request) {
@@ -45,18 +48,17 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         log.info("Incoming /login: {} ", request.getUsername());
-        User user = (User) authService.login(request);
-        if (user == null) {
-            return new ResponseEntity<>("user or password is not valid", HttpStatus.UNAUTHORIZED);
+        ResponseToken responseToken = authService.login(request);
+        if (responseToken == null) {
+            return new ResponseEntity<>("responseToken or password is not valid", HttpStatus.UNAUTHORIZED);
         }
 
-        UserDto userDto = new UserDto();
-        userDto.setUsername(user.getUsername());
-        userDto.setPassword(user.getPassword());
-        userDto.setEmail(user.getEmail());
-        userDto.setNoHandphone(user.getNoHandphone());
+        RequestToken requestToken = new RequestToken();
+        requestToken.setUsername(request.getUsername());
+        requestToken.setToken(responseToken.getToken());
+        requestToken.setTokenExpiredAt(responseToken.getExpiredAt());
 
         log.info("Outgoing /login: {} ", request.getUsername());
-        return new ResponseEntity<>(userDto, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(requestToken, HttpStatus.ACCEPTED);
     }
 }

@@ -17,4 +17,7 @@ public class User {
     private String email;
     private String password;
     private String noHandphone;
+    private String token;
+    @Column(name = "token_expired_at")
+    private Long tokenExpiredAt;
 }

@@ -12,4 +12,9 @@ public class TestController {
     public String hello() {
         return "Hello from JWT TOKEN";
     }
+
+    @GetMapping("/test")
+    public String testUsingTokenFromLogin() {
+        return "This is using token from login";
+    }
 }
