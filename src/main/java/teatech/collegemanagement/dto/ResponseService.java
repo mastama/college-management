@@ -3,7 +3,6 @@ package teatech.collegemanagement.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import teatech.collegemanagement.entity.Student;
 
 @Data
 @AllArgsConstructor
@@ -11,5 +10,5 @@ import teatech.collegemanagement.entity.Student;
 public class ResponseService {
     private String responseCode;
     private String responseDesc;
-    private Student data;
+    private String data;
 }
