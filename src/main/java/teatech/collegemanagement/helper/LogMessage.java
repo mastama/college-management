@@ -8,5 +8,9 @@ public class LogMessage {
         public static String StudentCreated() {
             return "Student with " + "created successfully";
         }
+
+        public static String updateStudent(String value) {
+            return "Student with " + value + " update successfully";
+        }
     }
 }

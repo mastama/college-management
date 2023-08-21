@@ -5,6 +5,7 @@ import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Table(name = "tbl_student")
@@ -26,4 +27,10 @@ public class Student {
     private Date updatedDate;
     @Column(name = "phone_number")
     private String phoneNumber;
+
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
+    private List<Address> addressList;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "classroom_id", referencedColumnName = "id")
+    private Classroom classroom;
 }

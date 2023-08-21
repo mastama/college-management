@@ -1,11 +1,11 @@
 package teatech.collegemanagement.service;
 
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import teatech.collegemanagement.dto.ResponseService;
 import teatech.collegemanagement.dto.StudentRequest;
+import teatech.collegemanagement.dto.UpdateStudentRequest;
 import teatech.collegemanagement.entity.Student;
 import teatech.collegemanagement.repository.StudentRepository;
 
@@ -43,5 +43,24 @@ public class StudentService {
 
     private static Date getCurrentDate() {
         return new Date();
+    }
+
+    public ResponseService updateStudent(String nim, UpdateStudentRequest request) {
+        log.info("Start updateStudent: {}", request.getNim());
+        ResponseService responseService = new ResponseService();
+        try {
+            Student student = (Student) studentRepository.findByNim(nim);
+            student.setFirstName(request.getFirstName());
+            student.setLastName(request.getLastName());
+            student.setNim(request.getNim());
+            student.setPhoneNumber(request.getPhoneNumber());
+            student.setUpdatedDate(getCurrentDate());
+
+            studentRepository.save(student);
+            log.info("End updateStudent: {}", student.getNim());
+        } catch (Exception e) {
+            throw e;
+        }
+        return responseService;
     }
 }
